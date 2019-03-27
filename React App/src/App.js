@@ -19,7 +19,8 @@ class App extends Component {
       input_enabled: false,
       choosen_category: all_categories[0],
       choosen_key: all_keys[all_categories[0]][0],
-      data: {}
+      data: {},
+      is_edit: false
     };
     this.add_category = this.add_category.bind(this);
     this.changeCategory = this.changeCategory.bind(this);
@@ -32,8 +33,12 @@ class App extends Component {
     this.save_keyword = this.save_keyword.bind(this);
   }
   add_category(e) {
+    if (this.state.is_edit) {
+      alert('Finish the changes, then add a new category!!!');
+      return;
+    }
     let x = $("#new-category").val();
-    let value = {};
+    let value = this.state.data;
     value[x] = {};
     this.setState({
       data: value
@@ -46,6 +51,10 @@ class App extends Component {
     console.log(all_keys);
   }
   changeCategory(e) {
+    if (this.state.is_edit) {
+      alert('Finish the changes, then change to a another category!!!');
+      return;
+    }
     console.log(all_keys[e.target.id][0])
     this.setState({
       choosen_category: e.target.id,
@@ -53,6 +62,10 @@ class App extends Component {
     });
   }
   add_key(e) {
+    if (this.state.is_edit) {
+      alert('Finish the changes, then add a new key!!!');
+      return;
+    }
     $("#key-input").show();
   }
   save_key(e) {
@@ -91,27 +104,94 @@ class App extends Component {
     }
   }
   changeKey(e) {
+    if (this.state.is_edit) {
+      alert('Finish the changes, then change to a another key!!!');
+      return;
+    }
     this.setState({
       choosen_key: e.target.id
     });
   }
   edit_details(e) {
+    this.setState({
+      is_edit: true
+    });
     $("#before-edit").hide();
     $("#on-edit").show();
   }
   save_details(e) {
+    this.setState({
+      is_edit: false
+    });
     $("#before-edit").show();
     $("#on-edit").hide();
+    let j = all_data[this.state.choosen_category][this.state.choosen_key];
+    j[1] = $("#edit-answer").val();
+    let found_flag = true;
+    for (var i in this.state.data) {
+      if (this.state.choosen_category == i) {
+        let k = this.state.data;
+        k[this.state.choosen_category][this.state.choosen_key] = j;
+        console.log(k)
+        this.setState({
+          data: k
+        });        
+        found_flag = false;
+        break;
+      }
+    }
+    if (found_flag || $.isEmptyObject(this.state.data)) {
+      console.log("Adding new category in data")
+      let value_1 = this.state.data;
+      value_1[this.state.choosen_category] = {};
+      value_1[this.state.choosen_category][this.state.choosen_key] = j;
+      this.setState({
+        data: value_1
+      });
+    }
+
+    // Sending data to API or Database
+    let url = "http://127.0.0.1/InsertOneItem";
+    $.post(url, {
+      data: this.state.data
+    }, function(response) {
+      alert("Response: "+response);
+      this.setState({
+        data: {}
+      });
+    });
   }
   add_keyword(e) {
     $("#keyword-input").show();
     $("#keyword-+").hide();
   }
   save_keyword(e) {
-    all_data[this.state.choosen_category][this.state.choosen_key][0].push($("#new-keyword").val());
-    alert('hiding')
+    let j = all_data[this.state.choosen_category][this.state.choosen_key];
+    j[0].push($("#new-keyword").val());
     $("#keyword-input").hide();
     $("#keyword-+").show();
+    let found_flag = true;
+    for (var i in this.state.data) {
+      if (this.state.choosen_category == i) {
+        let k = this.state.data;
+        k[this.state.choosen_category][this.state.choosen_key] = j;
+        console.log(k)
+        this.setState({
+          data: k
+        });        
+        found_flag = false;
+        break;
+      }
+    }
+    if (found_flag || $.isEmptyObject(this.state.data)) {
+      console.log("Adding new category in data")
+      let value_1 = this.state.data;
+      value_1[this.state.choosen_category] = {};
+      value_1[this.state.choosen_category][this.state.choosen_key] = j;
+      this.setState({
+        data: value_1
+      });
+    }
   }
   render() {
     return (
