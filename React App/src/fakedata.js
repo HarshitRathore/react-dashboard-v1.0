@@ -24,10 +24,10 @@ export const all_data_ = {
     'ID-1': [[], 'Answer']
   }
 }
-export const all_categories_ = ['Category-1', 'Category-2', 'Category-3', 'Category-4']
-export const all_keys_ = {
-  'Category-1': ['ID-1', 'ID-2', 'ID-3', 'ID-4', 'ID-5'],
-  'Category-2': ['ID-1', 'ID-2', 'ID-3', 'ID-4', 'ID-5'],
-  'Category-3': ['ID-1', 'ID-2', 'ID-3', 'ID-4', 'ID-5'],
-  'Category-4': ['ID-1']
-}
+// export const all_categories_ = ['Category-1', 'Category-2', 'Category-3', 'Category-4']
+// export const all_keys_ = {
+//   'Category-1': ['ID-1', 'ID-2', 'ID-3', 'ID-4', 'ID-5'],
+//   'Category-2': ['ID-1', 'ID-2', 'ID-3', 'ID-4', 'ID-5'],
+//   'Category-3': ['ID-1', 'ID-2', 'ID-3', 'ID-4', 'ID-5'],
+//   'Category-4': ['ID-1']
+// }

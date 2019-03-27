@@ -2,15 +2,24 @@ import React, { Component } from "react";
 import "bootstrap/dist/css/bootstrap.css";
 import './App.css';
 import $ from "jquery";
-import { all_data_, all_categories_, all_keys_ } from "./fakedata.js";
+import { all_data_ } from "./fakedata.js";
 
 let all_data = all_data_;
-let all_categories = all_categories_;
-let all_keys = all_keys_
-
-console.log(all_data);
-console.log(all_categories);
-console.log(all_keys);
+let url = "http://127.0.0.1/InsertOneItem";
+$.post(url, {}, function(response) {
+  console.log(response);
+  all_data = response;
+});
+let all_categories = [];
+let all_keys = {};
+for (var i in all_data) {
+  all_categories.push(i);
+  let k = []
+  for (var j in all_data[i]) {
+    k.push(j);
+  }
+  all_keys[i] = k;
+}
 
 class App extends Component {
   constructor() {
@@ -72,7 +81,7 @@ class App extends Component {
     let y = $("#new-key").val();
     let found_flag = true;
     for (var i in this.state.data) {
-      if (this.state.choosen_category == i) {
+      if (this.state.choosen_category === i) {
         found_flag = false;
         break;
       }
@@ -129,7 +138,7 @@ class App extends Component {
     j[1] = $("#edit-answer").val();
     let found_flag = true;
     for (var i in this.state.data) {
-      if (this.state.choosen_category == i) {
+      if (this.state.choosen_category === i) {
         let k = this.state.data;
         k[this.state.choosen_category][this.state.choosen_key] = j;
         console.log(k)
@@ -172,7 +181,7 @@ class App extends Component {
     $("#keyword-+").show();
     let found_flag = true;
     for (var i in this.state.data) {
-      if (this.state.choosen_category == i) {
+      if (this.state.choosen_category === i) {
         let k = this.state.data;
         k[this.state.choosen_category][this.state.choosen_key] = j;
         console.log(k)
@@ -198,7 +207,7 @@ class App extends Component {
       <div>
         <nav className="navbar navbar-expand-lg navbar-dark theme-bg">
           <div className="col-sm-3">
-            <a className="navbar-brand" href="#"> Client Logo </a>
+            <a className="navbar-brand" href="index.html"> Client Logo </a>
           </div>
           <div className="col-sm-3" />
           <div className="col-sm-3">
@@ -227,13 +236,13 @@ class App extends Component {
         <nav className="navbar navbar-light navbar-expand-md bg-light justify-content-between py-0 h-5 font-12" >
           <ul className="navbar-nav">
             <li className="nav-item">
-              <a className="nav-link" href="#"> Performance Analysis </a>
+              <a className="nav-link" href="index.html"> Performance Analysis </a>
             </li>
             <li className="nav-item">
-              <a className="nav-link" href="#"> Network Insights </a>
+              <a className="nav-link" href="index.html"> Network Insights </a>
             </li>
             <li className="nav-item">
-              <a className="nav-link" href="#"> Spend Analytics </a>
+              <a className="nav-link" href="index.html"> Spend Analytics </a>
             </li>
           </ul>
           <div className="col-1">
@@ -282,7 +291,7 @@ class App extends Component {
                 <div className="col-md-2 cat_list_box" >
                   <ul className="list-group">
                     {all_categories.map((data, i) => (
-                      <li className={this.state.choosen_category == data ? "list-group-item active font-14 cat-item" : "list-group-item font-14 cat-item"} id={data} key={i} onClick={this.changeCategory} >
+                      <li className={this.state.choosen_category === data ? "list-group-item active font-14 cat-item" : "list-group-item font-14 cat-item"} id={data} key={i} onClick={this.changeCategory} >
                         {data}
                       </li>
                     ))}
@@ -298,7 +307,7 @@ class App extends Component {
                       </button>
                     </li>
                     {all_keys[this.state.choosen_category].map((data, i) => (
-                      <li className={this.state.choosen_key == data ? "list-group-item active font-14 key-item" : "list-group-item font-14 key-item"} id={data} key={i} onClick={this.changeKey} >
+                      <li className={this.state.choosen_key === data ? "list-group-item active font-14 key-item" : "list-group-item font-14 key-item"} id={data} key={i} onClick={this.changeKey} >
                         {data}
                       </li>
                     ))}
@@ -310,7 +319,7 @@ class App extends Component {
                       <div className="row justify-content-between detail-header" >
                         <p className="detail-header-key font-14" >
                           {
-                            all_keys[this.state.choosen_category].length == 0 ? ('-') : this.state.choosen_key
+                            all_keys[this.state.choosen_category].length === 0 ? ('-') : this.state.choosen_key
                           }
                         </p>
                         <button className="btn btn-outline-primary rounded font-12 detail-header-edit-btn" type="button" onClick={this.edit_details} >
@@ -319,7 +328,7 @@ class App extends Component {
                       </div>
                       <div className="row detail-keywords" >
                       {
-                        all_keys[this.state.choosen_category].length == 0
+                        all_keys[this.state.choosen_category].length === 0
                          ? 
                          (<span className="badge badge-pill m-1 keywords-badge" >
                             -
@@ -345,7 +354,7 @@ class App extends Component {
                         <div className="detail-answer-block" >
                           <p type="text" className="text font-12 detail-answer" >
                             {
-                              all_keys[this.state.choosen_category].length == 0
+                              all_keys[this.state.choosen_category].length === 0
                                ? ('-') 
                                : all_data[this.state.choosen_category][this.state.choosen_key][1]
                             }
@@ -357,13 +366,13 @@ class App extends Component {
                       <div className="row justify-content-between detail-header" >
                         <p className="detail-header-key font-14" >
                           {
-                            all_keys[this.state.choosen_category].length == 0 ? ('-') : this.state.choosen_key
+                            all_keys[this.state.choosen_category].length === 0 ? ('-') : this.state.choosen_key
                           }
                         </p>
                       </div>
                       <div className="row detail-keywords" >
                       {
-                        all_keys[this.state.choosen_category].length == 0
+                        all_keys[this.state.choosen_category].length === 0
                          ? 
                          (<span className="badge badge-pill m-1 keywords-badge" >
                             -
@@ -400,7 +409,7 @@ class App extends Component {
                         <div className="form-group">
                           <textarea className="form-control" id="edit-answer" rows="3" 
                           data={
-                              all_keys[this.state.choosen_category].length == 0
+                              all_keys[this.state.choosen_category].length === 0
                                ? ('-') 
                                : all_data[this.state.choosen_category][this.state.choosen_key][1]
                             }>
